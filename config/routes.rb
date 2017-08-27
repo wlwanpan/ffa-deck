@@ -1,3 +1,8 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  # resources :accounts
+  # scope :format => true, :constraints => { :format => 'json' } do
+  #   post   "/login"       => "session#create"
+  #   delete "/logout"      => "session#destroy"
+  # end
+  resources :users
 end
