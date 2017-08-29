@@ -13,7 +13,8 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'rack-cors'
 gem 'active_model_serializers', '~> 0.10.0.rc1'
 gem 'jwt'
-gem 'clearance', '~> 1.15.1'
+gem 'rabl'
+gem 'oj'
 
 group :development do
   gem "better_errors"
