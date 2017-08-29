@@ -6,7 +6,4 @@ class Account < ApplicationRecord
     self.update_columns(token: nil)
   end
 
-  def self.valid_login?(email, password)
-  end
-
 end

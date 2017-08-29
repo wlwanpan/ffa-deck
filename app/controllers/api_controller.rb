@@ -1,10 +1,10 @@
-class ApiController < ApplicationController::API
+class ApiController < ApplicationController
   include ActionController::HttpAuthentication::Token::ControllerMethods
   def require_login
     authenticate_token || render_unauthorized("Access denied")
   end
 
-  def current_user
+  def current_account
     @current_user ||= authenticate_token
   end
 
@@ -19,11 +19,11 @@ class ApiController < ApplicationController::API
 
   def authenticate_token
     authenticate_with_http_token do |token, options|
-      if user = User.find_by(token: token)
+      if account = Account.find_by(token: token)
         ActiveSupport::SecurityUtils.secure_compare(
                         ::Digest::SHA256.hexdigest(token),
-                        ::Digest::SHA256.hexdigest(user.token))
-        user
+                        ::Digest::SHA256.hexdigest(account.token))
+        account
       end
     end
   end  
