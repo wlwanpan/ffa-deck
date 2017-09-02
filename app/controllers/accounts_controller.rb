@@ -1,39 +1,40 @@
-class AccountsController < SessionController
-  before_action :load_account, only: [:login, :show, :create_token]
+class AccountsController < ApiController
+  # before_action :load_account, only: [:login, :show, :create_token]
+  # skip_before_action :require_login, only: [:create_token], raise: false
 
   def index
-    render status: 200
+    render_status_ok
   end
 
   def show
-    render status: 200
+    render_status_ok
   end
 
   def register
-    if Account.find_by(username: register_params[:username])
-      render json: { message: "Account already exist", status: 403 }
+    account = Account.new(register_params)
+    if account.save
+      render json: { status: true, message: "Register Successful" }
     else
-      account = Account.new(register_params)
-      if account.save
-        render json: { message: "valid", status: 200 }
-      else
-        render json: { message: "invalid" }
-      end
+      render json: account.errors
     end
   end
 
   def login
-    if @account.nil?
-      render json: { exist: false }
+    if current_account.blank?
+      render json: { status: false, message: "Wrong password" }
     else
-      render json: { exist: true, token: create_token }
+      render json: { status: true, id: current_account.id, token: create_token }
     end
+  end
+
+  def logout
+    destroy_token
   end
 
   private
 
-  def load_account
-    @account ||= Account.find_by(username: login_params[:username]).try(:authenticate, login_params[:password])
+  def current_account
+    authenticate_token || Account.find_by(username: login_params[:username]).try(:authenticate, login_params[:password])
   end
 
   def login_params
@@ -41,7 +42,6 @@ class AccountsController < SessionController
   end
 
   def register_params
-    # params.require(:register).permit(:username, :email, :password, :password_confirmation)
     params.require(:register).permit(:username, :password)
   end
 

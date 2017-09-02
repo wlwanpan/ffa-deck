@@ -8,6 +8,9 @@ end
 
 gem 'rails', '~> 5.1.3'
 gem 'sqlite3'
+gem 'pg', group: :production # Added postgres and made it production only.
+gem 'rails_12factor' # Heroku gem to set deployment platform
+
 gem 'puma', '~> 3.7'
 gem 'bcrypt', '~> 3.1.7'
 gem 'rack-cors'
