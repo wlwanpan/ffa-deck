@@ -5,7 +5,6 @@ Rails.application.routes.draw do
       post :logout, path: "/logout"      
       post :register, path: "/register"
     end
-    member do 
-    end
   end
+  resources :channels, only: [:index, :create]
 end

@@ -7,7 +7,7 @@ class AccountsController < ApiController
   end
 
   def show
-    render_status_ok
+    render json: { status: authenticate? }
   end
 
   def register
@@ -34,7 +34,7 @@ class AccountsController < ApiController
   private
 
   def current_account
-    authenticate_token || Account.find_by(username: login_params[:username]).try(:authenticate, login_params[:password])
+    authenticate || Account.find_by(username: login_params[:username]).try(:authenticate, login_params[:password])
   end
 
   def login_params
