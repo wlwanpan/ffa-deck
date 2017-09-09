@@ -12,7 +12,6 @@ gem 'rails_12factor' # Heroku gem to set deployment platform
 gem 'puma', '~> 3.7'
 gem 'bcrypt', '~> 3.1.7'
 gem 'rack-cors'
-gem 'active_model_serializers', '~> 0.10.0.rc1'
 gem 'oj'
 gem 'redis'
 

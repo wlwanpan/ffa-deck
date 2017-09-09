@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+
+  mount ActionCable.server => '/cable'
+
   resources :accounts, only: [:index, :create] do
     collection do
       post :login, path: "/login"
@@ -6,5 +9,7 @@ Rails.application.routes.draw do
       post :register, path: "/register"
     end
   end
+  
   resources :channels, only: [:index, :create]
+
 end
