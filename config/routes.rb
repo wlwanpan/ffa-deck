@@ -10,6 +10,9 @@ Rails.application.routes.draw do
     end
   end
   
-  resources :channels, only: [:index, :create]
-
+  resources :channels, only: [:index, :create] do
+    member do
+      post :broadcast, path: "/broadcast"
+    end
+  end
 end

@@ -1,23 +1,26 @@
 module ApplicationCable
   class Connection < ActionCable::Connection::Base
-    include ActionController::HttpAuthentication::Token::ControllerMethods
-    identify_by :current_account
+    # include ActionController::HttpAuthentication::Token::ControllerMethods
+    identified_by :current_account
 
     def connect
-      self.current_account = authenticated_account
+      puts "Connetion called"
+      puts cookies.signed[:identity_id]
+      self.current_account ||= find_verified_user
     end
 
+    def disconnect
+      puts "disconnect called"
+      # Any cleanup work needed when the cable connection is cut.
+    end
 
-    private
-
-    def authenticated_account
-      authenticate_with_http_token do |token, options|
-        if account = Account.find_by(token: token)
-          ActiveSupport::SecurityUtils.secure_compare(::Digest::SHA256.hexdigest(token), ::Digest::SHA256.hexdigest(account.token))
-          account
+    protected
+      def find_verified_user
+        if verified_user = Account.find_by(token: request.params[:token])
+          verified_user
+        else
+          reject_unauthorized_connection
         end
       end
-    end
-
   end
 end

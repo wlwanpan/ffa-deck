@@ -9,6 +9,10 @@ class ChannelsController < ApiController
     render json: { channels: current_account.channels }
   end
 
+  def broadcast
+    ActionCable.server.broadcast 'messages_channel', message: params[:message], from: params[:id]
+  end
+
   private
 
   def current_account
