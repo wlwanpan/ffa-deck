@@ -1,11 +1,8 @@
 module ApplicationCable
   class Connection < ActionCable::Connection::Base
-    # include ActionController::HttpAuthentication::Token::ControllerMethods
     identified_by :current_account
 
     def connect
-      puts "Connetion called"
-      puts cookies.signed[:identity_id]
       self.current_account ||= find_verified_user
     end
 
@@ -16,7 +13,9 @@ module ApplicationCable
 
     protected
       def find_verified_user
-        if verified_user = Account.find_by(token: request.params[:token])
+        token = request.params[:token]
+        if verified_user = Account.find_by(token: token)
+          ActiveSupport::SecurityUtils.secure_compare( ::Digest::SHA256.hexdigest(token), ::Digest::SHA256.hexdigest(verified_user.token) )
           verified_user
         else
           reject_unauthorized_connection

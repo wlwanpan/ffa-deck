@@ -10,7 +10,7 @@ class ChannelsController < ApiController
   end
 
   def broadcast
-    ActionCable.server.broadcast 'messages_channel', message: params[:message], from: params[:id]
+    ActionCable.server.broadcast "MessagesChannel", message: params[:message], from: params[:id]
   end
 
   private

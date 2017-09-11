@@ -23,7 +23,7 @@ class AccountsController < ApiController
     if current_account.blank?
       render json: { status: false, message: "Wrong password" }
     else
-      render json: { status: true, id: current_account.id, token: create_token }
+      render json: { status: true, id: current_account.id, token: create_token, username: current_account.username }
     end
   end
 
