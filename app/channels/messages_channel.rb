@@ -5,13 +5,8 @@ class MessagesChannel < ApplicationCable::Channel
   end
 
   def unsubscribed
-    # Any cleanup needed when channel is unsubscribed
     stop_all_streams
   end
 
   private
-
-  def current_channel
-    Channel.find_by(uuid: params[:channelUUID]) || nil
-  end
 end

@@ -8,7 +8,6 @@ module ApplicationCable
 
     def disconnect
       puts "disconnect called"
-      # Any cleanup work needed when the cable connection is cut.
     end
 
     protected

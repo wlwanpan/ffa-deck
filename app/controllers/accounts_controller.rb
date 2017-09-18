@@ -31,6 +31,10 @@ class AccountsController < ApiController
     destroy_token
   end
 
+  def broadcast
+    ActionCable.server.broadcast params[:channel], from: current_account.id, username: current_account.username, data: params[:data]
+  end
+
   private
 
   def current_account
