@@ -6,15 +6,5 @@ test:
 
 production:
   adapter: redis
-  url: redis://localhost:6379/1
+  url: redis://redistogo:d4af99a81599a0a00e1c7d490770a89e@tarpon.redistogo.com:10147/
   channel_prefix: ffa-deck_production
-
-# production: &production
-#   adapter: redis
-#   url: redis://10.10.3.153:6381
-
-# development: &development
-#   adapter: redis
-#   url: redis://localhost:6379
-  
-# test: *development
