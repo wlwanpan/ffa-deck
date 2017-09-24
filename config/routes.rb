@@ -4,12 +4,10 @@ Rails.application.routes.draw do
 
   match 'broadcast', to: 'accounts#broadcast', via: [:post]
 
-  resources :accounts, only: [:index, :show, :create] do
-    collection do
-      post :login, path: "/login"
-      post :logout, path: "/logout"  
-      post :register, path: "/register"
-    end
+  resource :account, only: [:index, :show, :create] do
+    post :login, path: "/login"
+    post :logout, path: "/logout"  
+    post :register, path: "/register"
   end
 
 end

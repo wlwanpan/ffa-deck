@@ -7,7 +7,16 @@ class AccountsController < ApiController
   end
 
   def show
-    render json: { status: authenticate? }
+    if account = authenticate
+      render json: {
+        status: true, id: account.id, token: account.token,
+        username: account.username, channelID: account.channel_id
+      }
+    else
+      render json: {
+        status: false, message: "Token authentication failed"
+      }
+    end
   end
 
   def register
@@ -21,9 +30,14 @@ class AccountsController < ApiController
 
   def login
     if current_account.blank?
-      render json: { status: false, message: "Wrong password" }
+      render json: {
+        status: false, message: "Wrong password"
+      }
     else
-      render json: { status: true, id: current_account.id, token: create_token, username: current_account.username }
+      render json: {
+        status: true, id: current_account.id, token: create_token,
+        username: current_account.username, channelID: current_account.channel_id
+      }
     end
   end
 
@@ -32,7 +46,7 @@ class AccountsController < ApiController
   end
 
   def broadcast
-    ActionCable.server.broadcast params[:channel], from: current_account.id, username: current_account.username, data: params[:data]
+    ActionCable.server.broadcast "connector-#{params[:tunnel]}", from: current_account.id, data: broadcast_data, replyChannel: current_account.channel_id
   end
 
   private
@@ -41,12 +55,20 @@ class AccountsController < ApiController
     authenticate || Account.find_by(username: login_params[:username]).try(:authenticate, login_params[:password])
   end
 
+  def broadcast_data
+    data = params[:data]
+    data[:username] = current_account.username
+    data
+  end
+
   def login_params
     params.require(:login).permit(:username, :password)
   end
 
   def register_params
-    params.require(:register).permit(:username, :password)
+    register_data = params.require(:register).permit(:username, :password)
+    register_data[:channel_id] = SecureRandom.uuid
+    register_data
   end
 
 end
