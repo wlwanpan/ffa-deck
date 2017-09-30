@@ -22,7 +22,9 @@ class AccountsController < ApiController
   def register
     account = Account.new(register_params)
     if account.save
-      render json: { status: true, message: "Register Successful" }
+      render json: {
+        status: true, message: "Register Successful"
+      }
     else
       render json: account.errors
     end

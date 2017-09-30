@@ -6,8 +6,10 @@ Rails.application.routes.draw do
 
   resource :account, only: [:index, :show, :create] do
     post :login, path: "/login"
-    post :logout, path: "/logout"  
+    post :logout, path: "/logout"
     post :register, path: "/register"
+
+    resources :games, only: [:create, :index, :show, :destroy]
   end
 
 end

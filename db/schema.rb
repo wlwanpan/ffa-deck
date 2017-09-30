@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170923180516) do
+ActiveRecord::Schema.define(version: 20170930042108) do
 
   create_table "accounts", force: :cascade do |t|
     t.string "username"
@@ -21,6 +21,16 @@ ActiveRecord::Schema.define(version: 20170923180516) do
     t.datetime "updated_at", null: false
     t.string "channel_id"
     t.index ["token"], name: "index_accounts_on_token"
+  end
+
+  create_table "games", force: :cascade do |t|
+    t.integer "account_id"
+    t.integer "member_limit"
+    t.string "game_channel_uuid"
+    t.text "members"
+    t.string "game_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end
