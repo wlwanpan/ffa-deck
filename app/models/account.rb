@@ -5,7 +5,7 @@ class Account < ApplicationRecord
   validates :username, uniqueness: { case_sensitive: false }, on: :create, if: :duplicate_username
   validates :password, on: :create, length: { in: 5..20 }
 
-  has_many :games
+  has_many :games, dependent: :destroy
 
   def duplicate_username
     return true if Account.find_by_username(self.username).present?

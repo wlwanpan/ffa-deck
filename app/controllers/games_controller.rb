@@ -1,10 +1,11 @@
 class GamesController < ApiController
-  before_action :authenticate_account, only: [:create, :index, :destroy]
+  before_action :authenticate_account, only: [:create, :destroy, :update]
 
   def index
   end
 
   def show
+    # add check to allow only invited members to view channel
     current_game = Game.find(params[:id])
     if current_game
       render json: {
@@ -15,6 +16,14 @@ class GamesController < ApiController
   end
 
   def update
+    # update members seperately
+    if @current_account.update_attributes(update_params)
+      render_status_ok
+    else
+      render json: {
+        errors: "cannot update game"
+      }
+    end
   end
 
   def create
@@ -42,7 +51,7 @@ class GamesController < ApiController
 
   def update_params
     params.require(:gameData).permit(
-
+      :member_limit, :members, :game_name
     )
   end
 

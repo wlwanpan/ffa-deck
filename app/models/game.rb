@@ -1,11 +1,13 @@
 class Game < ApplicationRecord
-  after_initialize :generate_channel_id
+  after_create :generate_channel_id
+
+  attr_accessor :member_limit, :members, :game_name
 
   belongs_to :account
   serialize :members, Array
 
   def generate_channel_id
-    self.game_channel_uuid = SecureRandom.uuid
+    self.update_column :game_channel_uuid, SecureRandom.uuid
   end
 
 end
