@@ -56,7 +56,7 @@ class GamesController < ApiController
   end
 
   def authenticate_account
-    @current_account = authenticate
+    @current_account ||= authenticate
   end
 
 end
