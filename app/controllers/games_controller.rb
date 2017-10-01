@@ -4,11 +4,25 @@ class GamesController < ApiController
   def index
   end
 
+  def show
+    current_game = Game.find(params[:id])
+    if current_game
+      render json: {
+        id: current_game.id, ownerID: current_game.account_id,
+        channelID: current_game.game_channel_uuid, members: current_game.members
+      }
+    end
+  end
+
+  def update
+  end
+
   def create
     new_game = Game.new
     if @current_account.games << new_game
       render json: {
-        gameID: new_game.id, channelID: new_game.game_channel_uuid
+        id: new_game.id, channelID: new_game.game_channel_uuid,
+        ownerID: new_game.account_id
       }
     else
       render json: {
@@ -25,6 +39,12 @@ class GamesController < ApiController
   end
 
   private
+
+  def update_params
+    params.require(:gameData).permit(
+
+    )
+  end
 
   def authenticate_account
     @current_account = authenticate

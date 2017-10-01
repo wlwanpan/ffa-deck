@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     post :logout, path: "/logout"
     post :register, path: "/register"
 
-    resources :games, only: [:create, :index, :show, :destroy]
+    resources :games
   end
 
 end
