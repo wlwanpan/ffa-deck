@@ -1,13 +1,13 @@
 class Game < ApplicationRecord
-  after_create :generate_channel_id
-
   attr_accessor :member_limit, :members, :game_name
+  # include ActiveAttr::Model
+
+  # attribute :game_channel_uuid, :default -> () { SecureRandom.uuid }
+  # Wtf am I doing wrong =/ ^
+  after_create Proc.new { self.update_column :game_channel_uuid, SecureRandom.uuid }
 
   belongs_to :account
   serialize :members, Array
 
-  def generate_channel_id
-    self.update_column :game_channel_uuid, SecureRandom.uuid
-  end
 
 end

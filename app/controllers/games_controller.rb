@@ -49,10 +49,12 @@ class GamesController < ApiController
 
   private
 
+  def members_params
+    params.require(:gameData).permit( :members )
+  end
+
   def update_params
-    params.require(:gameData).permit(
-      :member_limit, :members, :game_name
-    )
+    params.require(:gameData).permit( :member_limit, :game_name )
   end
 
   def authenticate_account

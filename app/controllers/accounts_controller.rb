@@ -48,7 +48,7 @@ class AccountsController < ApiController
   end
 
   def broadcast
-    ActionCable.server.broadcast "connector-#{params[:tunnel]}", from: current_account.id, data: broadcast_data, replyChannel: current_account.channel_id
+    ActionCable.server.broadcast "connector-#{params[:tunnel]}", from: current_account.id, data: broadcast_data
   end
 
   private
@@ -60,6 +60,7 @@ class AccountsController < ApiController
   def broadcast_data
     data = params[:data]
     data[:username] = current_account.username
+    data[:replyChannel]  = current_account.channel_id
     data
   end
 
@@ -68,9 +69,7 @@ class AccountsController < ApiController
   end
 
   def register_params
-    register_data = params.require(:register).permit(:username, :password)
-    register_data[:channel_id] = SecureRandom.uuid
-    register_data
+    params.require(:register).permit(:username, :password)
   end
 
 end
