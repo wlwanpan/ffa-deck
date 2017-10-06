@@ -1,4 +1,5 @@
 class GamesController < ApiController
+  include Multiplexer
   before_action :authenticate_account, only: [:create, :destroy, :update]
 
   def index

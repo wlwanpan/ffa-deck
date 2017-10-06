@@ -9,7 +9,11 @@ Rails.application.routes.draw do
     post :logout, path: "/logout"
     post :register, path: "/register"
 
-    resources :games
+    resources :games do
+      member do
+        post :broadcast, path: "/broadcast"
+      end
+    end
   end
 
 end

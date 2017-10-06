@@ -1,10 +1,6 @@
 class ApiController < ApplicationController
   include ActionController::HttpAuthentication::Token::ControllerMethods
 
-  def require_login
-    authenticate || render_unauthorized("Access denied")
-  end
-
   protected
 
   def render_unauthorized(message)
@@ -30,5 +26,5 @@ class ApiController < ApplicationController
         account
       end
     end
-  end  
+  end
 end

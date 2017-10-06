@@ -1,17 +1,18 @@
 class AccountsController < ApiController
-  # before_action :load_account, only: [:login, :show, :create_token]
-  # skip_before_action :require_login, only: [:create_token], raise: false
+  include Multiplexer
+  include ActiveModel::Serialization
+
+  before_action :current_account, only: [:show, :broadcast]
 
   def index
     render_status_ok
   end
 
   def show
-    if account = authenticate
-      render json: {
-        status: true, id: account.id, token: account.token,
-        username: account.username, channelID: account.channel_id
-      }
+    if @current_account
+      output_json = @current_account.as_json(only: [:id, :username, :channel_id])
+      output_json["status"] = true
+      render json: output_json
     else
       render json: {
         status: false, message: "Token authentication failed"
@@ -31,15 +32,20 @@ class AccountsController < ApiController
   end
 
   def login
-    if current_account.blank?
+    @current_account = Account.find_by(username: login_params[:username])
+                              .try(:authenticate, login_params[:password])
+    if @current_account.blank?
       render json: {
         status: false, message: "Wrong password"
       }
     else
-      render json: {
-        status: true, id: current_account.id, token: create_token,
-        username: current_account.username, channelID: current_account.channel_id
-      }
+      cache_channel(@current_account.id, @current_account.channel_id)
+
+      output_json = @current_account.as_json(only: [:id, :username, :channel_id])
+      output_json["status"] = true
+      output_json["token"] = create_token
+
+      render json: output_json
     end
   end
 
@@ -48,19 +54,22 @@ class AccountsController < ApiController
   end
 
   def broadcast
-    ActionCable.server.broadcast "connector-#{params[:tunnel]}", from: current_account.id, data: broadcast_data
+    if params[:to] == 'global'
+      broadcast_to_all(@current_account.id, broadcast_data)
+    else
+      broadcast_to(params[:to], broadcast_data)
+    end
   end
 
   private
 
   def current_account
-    authenticate || Account.find_by(username: login_params[:username]).try(:authenticate, login_params[:password])
+    @current_account ||= authenticate
   end
 
   def broadcast_data
     data = params[:data]
     data[:username] = current_account.username
-    data[:replyChannel]  = current_account.channel_id
     data
   end
 

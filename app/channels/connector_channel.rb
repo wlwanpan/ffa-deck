@@ -1,5 +1,5 @@
-class ConnectorChannel < ApplicationCable::Channel  
-  
+class ConnectorChannel < ApplicationCable::Channel
+
   def subscribed
     stream_from "connector-#{params[:tunnel]}"
   end
