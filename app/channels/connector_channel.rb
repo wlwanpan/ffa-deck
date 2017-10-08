@@ -1,7 +1,7 @@
 class ConnectorChannel < ApplicationCable::Channel
 
   def subscribed
-    stream_from "connector-#{params[:tunnel]}"
+    stream_from "connector-#{params[:to]}"
   end
 
   def unsubscribed

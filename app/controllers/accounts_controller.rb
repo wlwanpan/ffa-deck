@@ -69,7 +69,6 @@ class AccountsController < ApiController
 
   def broadcast_data
     data = params[:data]
-    data[:username] = current_account.username
     data
   end
 
