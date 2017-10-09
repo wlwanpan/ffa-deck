@@ -10,6 +10,9 @@ class AccountsController < ApiController
 
   def show
     if @current_account
+      # To remove on production
+      cache_channel(@current_account.id, @current_account.channel_id)
+
       output_json = @current_account.as_json(only: [:id, :username, :channel_id])
       output_json["status"] = true
       render json: output_json
@@ -69,6 +72,7 @@ class AccountsController < ApiController
 
   def broadcast_data
     data = params[:data]
+    # add default data to send to
     data
   end
 

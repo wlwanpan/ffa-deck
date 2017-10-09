@@ -1,5 +1,6 @@
 class GamesController < ApiController
   include Multiplexer
+  include ActiveModel::Serialization
   before_action :authenticate_account, only: [:create, :destroy, :update]
 
   def index
@@ -11,8 +12,26 @@ class GamesController < ApiController
     if current_game
       render json: {
         id: current_game.id, ownerID: current_game.account_id,
-        channelID: current_game.game_channel_uuid, members: current_game.members
+        members: current_game.members
       }
+    end
+  end
+
+  def broadcast
+    current_game = Game.find(params[:id])
+    output_data = params[:data]
+    if current_game
+      account_id_lst = current_game.members || []
+      account_id_lst.push(current_game.account_id) # to change so owner is already in members list
+
+      output_data = output_data.merge({
+          gameID: current_game.id,
+          status: "game-channel"
+        })
+
+      broadcast_to_multiple(account_id_lst, output_data)
+    else
+      render json: { status: 'sent' }
     end
   end
 
@@ -22,7 +41,7 @@ class GamesController < ApiController
       render_status_ok
     else
       render json: {
-        errors: "cannot update game"
+        errors: "Cannot update game"
       }
     end
   end

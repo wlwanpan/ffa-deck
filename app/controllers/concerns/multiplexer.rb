@@ -9,6 +9,12 @@ module Multiplexer
     @@cache.fetch("account_#{account_id}")
   end
 
+  def broadcast_to_multiple(account_ids, data)
+    account_ids.each do |account_id|
+      broadcast_to(account_id, data)
+    end
+  end
+
   def broadcast_to_all(from, data)
     ActionCable.server.broadcast "connector-global", from: from, data: data
   end
