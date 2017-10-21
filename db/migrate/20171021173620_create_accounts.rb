@@ -5,9 +5,10 @@ class CreateAccounts < ActiveRecord::Migration[5.1]
       t.string :token
       t.string :email
       t.string :password_digest
-
+      t.string :channel_id
       t.timestamps
     end
     add_index :accounts, :token
   end
+
 end
