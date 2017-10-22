@@ -50,7 +50,7 @@ class GamesController < ApiController
     new_game = Game.new
     if @current_account.games << new_game
       render json: {
-        id: new_game.id, channelID: new_game.game_channel_uuid,
+        id: new_game.id, channelID: new_game.channel_id,
         ownerID: new_game.account_id
       }
     else
